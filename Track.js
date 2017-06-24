@@ -5,8 +5,12 @@ var moment = require('moment');
 module.exports = class Track extends React.Component {
   changePlayback() {
     if (this.refs.audioEl.paused) {
+
+      this.props.setActiveAudioEl(this.refs.audioEl);
+
       return this.refs.audioEl.play();
     }
+
 
     return this.refs.audioEl.pause();
   }
