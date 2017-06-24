@@ -1,0 +1,32 @@
+{
+  "name": "mutant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify index.js -t browserify-css -t reactify > build.js",
+    "watch": "watchify index.js -t browserify-css -t reactify -p [ livereactload ] -o build.js",
+    "start": "concurrently \"node server.js\" \"npm run watch\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "./publish"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^14.4.0",
+    "browserify-css": "^0.10.1",
+    "concurrently": "^3.5.0",
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "glslify": "^6.1.0",
+    "livereactload": "^4.0.0-beta.2",
+    "moment": "^2.18.1",
+    "pixi-filters": "^1.0.6",
+    "pixi.js": "^4.5.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "reactify": "^1.1.1",
+    "tachyons": "^4.7.4",
+    "watchify": "^3.9.0"
+  }
+}
