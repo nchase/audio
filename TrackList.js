@@ -9,7 +9,14 @@ module.exports = function TrackList (props) {
     >
       {
         props.tracks.map(function(src, index) {
-          return ( <Track key={src} src={src} index={index + 1} /> );
+          return (
+            <Track
+              key={src}
+              src={src}
+              index={index + 1}
+              setActiveAudioEl={props.setActiveAudioEl}
+            />
+          );
         })
       }
     </div>
