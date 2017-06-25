@@ -11,10 +11,12 @@ module.exports = class Graphic extends React.Component {
   }
 
   componentDidMount() {
-    this.renderer = PIXI.autoDetectRenderer();
+    this.renderer = PIXI.autoDetectRenderer(640, 500);
     this.refs.graphic.appendChild(this.renderer.view);
 
     var graphic = this.refs.graphic.sprite = PIXI.Sprite.fromImage(this.props.src);
+    graphic.scale.x = 0.8;
+    graphic.scale.y = 0.8;
     graphic.filters = [new PIXI.filters.RGBSplitFilter()]
     graphic.filters[0].red = graphic.filters[0].blue = graphic.filters[0].green = [0, 0];
 
