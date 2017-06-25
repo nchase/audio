@@ -85,8 +85,6 @@ function drawUpdate(analyser, filter) {
 }
 
 function updateFilter (value, filter) {
-  logger(value);
-
   filter.red = [-value * 3, value];
   filter.green = [value, value];
 }
