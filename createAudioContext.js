@@ -1,23 +1,29 @@
 module.exports = function createAudioContext(audioSource) {
-  var audioContext = new (window.AudioContext || window.webkitAudioContext);
 
-  if (!window.audioSource) {
-    var audioSource = window.audioSource = Object.assign(audioContext.createMediaElementSource(audioSource));
+  if (!window.audioSources) {
+    window.audioContext = new (window.AudioContext || window.webkitAudioContext);
+    window.audioSources = {};
   }
+
+  if (!window.audioSources[audioSource.src]) {
+    window.audioSources[audioSource.src] = Object.assign(window.audioContext.createMediaElementSource(audioSource));
+  }
+
+  var audioSource = window.audioSources[audioSource.src];
 
   var processor;
 
   try {
-    processor = audioContext.createScriptProcessor();
+    processor = audioSource.context.createScriptProcessor();
   } catch(error) {
-    processor = audioContext.createScriptProcessor(4096);
+    processor = audioSource.context.createScriptProcessor(4096);
   }
 
-  var analyser = audioContext.createAnalyser();
+  var analyser = audioSource.context.createAnalyser();
 
 
   analyser.fftSize = 32;
 
 
-  return {audioContext, audioSource: window.audioSource, processor, analyser}
+  return {audioContext, audioSource: audioSource, processor, analyser}
 }
