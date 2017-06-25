@@ -25,7 +25,7 @@ module.exports = class Track extends React.Component {
   }
 
   changeCurrentTime(event) {
-    if (!this.props.playing) {
+    if (this.refs.audioEl.paused) {
       return false;
     }
 
@@ -68,7 +68,7 @@ module.exports = class Track extends React.Component {
   }
 
   renderPlayState() {
-    if (this.props.playing) {
+    if (this.refs.audioEl && !this.refs.audioEl.paused) {
       return '▌▌';
     }
 
