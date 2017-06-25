@@ -1,29 +1,27 @@
-module.exports = function createAudioContext(audioSource) {
+module.exports = function createAudioContext(audioEl) {
 
   if (!window.audioSources) {
     window.audioContext = new (window.AudioContext || window.webkitAudioContext);
     window.audioSources = {};
   }
 
-  if (!window.audioSources[audioSource.src]) {
-    window.audioSources[audioSource.src] = Object.assign(window.audioContext.createMediaElementSource(audioSource));
+  if (!window.audioSources[audioEl.src]) {
+    window.audioSources[audioEl.src] = Object.assign(window.audioContext.createMediaElementSource(audioEl));
   }
-
-  var audioSource = window.audioSources[audioSource.src];
 
   var processor;
 
   try {
-    processor = audioSource.context.createScriptProcessor();
+    processor = window.audioSources[audioEl.src].context.createScriptProcessor();
   } catch(error) {
-    processor = audioSource.context.createScriptProcessor(4096);
+    processor = window.audioSources[audioEl.src].context.createScriptProcessor(4096);
   }
 
-  var analyser = audioSource.context.createAnalyser();
+  var analyser = window.audioSources[audioEl.src].context.createAnalyser();
 
 
   analyser.fftSize = 32;
 
 
-  return {audioContext, audioSource: audioSource, processor, analyser}
+  return {audioContext, audioSource: window.audioSources[audioEl.src], processor, analyser}
 }
