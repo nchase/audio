@@ -8,9 +8,16 @@ module.exports = class Track extends React.Component {
 
       this.props.setActiveAudioEl(this.refs.audioEl);
 
+      this.setState({
+        playing: true
+      });
+
       return this.refs.audioEl.play();
     }
 
+    this.setState({
+      playing: false
+    });
 
     return this.refs.audioEl.pause();
   }
@@ -19,6 +26,20 @@ module.exports = class Track extends React.Component {
     this.setState({
       progress: `${this.refs.audioEl.currentTime / this.refs.audioEl.duration * 100}%`
     });
+  }
+
+  changeCurrentTime(event) {
+    if (!this.state.playing) {
+      return false;
+    }
+
+    var progressBarElDims = event.currentTarget.getBoundingClientRect()
+
+    var desiredDistance = (event.clientX - progressBarElDims.left);
+
+    var distanceRatio = desiredDistance / progressBarElDims.width;
+
+    return this.refs.audioEl.currentTime = (distanceRatio * this.refs.audioEl.duration);
   }
 
   constructor(props) {
@@ -50,13 +71,26 @@ module.exports = class Track extends React.Component {
     return `${moment.utc(this.refs.audioEl.duration * 1000).format('mm:ss')}`;
   }
 
+  renderPlayState() {
+    if (this.state.playing) {
+      return '▌▌';
+    }
+
+    return '►'
+  }
+
   render() {
     return (
       <div
-        className="pointer flex items-center justify-between"
-        onClick={this.changePlayback.bind(this)}
+        className="pointer flex items-center justify-between mb3"
       >
-        <div>
+        <div
+          onClick={this.changePlayback.bind(this)}
+        >
+          <span className="mr3 dib">
+            {this.renderPlayState()}
+          </span>
+
           Track {this.props.index}
         </div>
         {
@@ -66,7 +100,8 @@ module.exports = class Track extends React.Component {
         }
         <div
           className="w-50 bg-gray"
-          style={{height: '4px' }}
+          style={{height: '12px' }}
+          onMouseDown={this.changeCurrentTime.bind(this)}
         >
           <div
             className="bg-black h-100"
