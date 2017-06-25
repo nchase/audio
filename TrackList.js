@@ -15,6 +15,8 @@ module.exports = function TrackList (props) {
               src={src}
               index={index + 1}
               setActiveAudioEl={props.setActiveAudioEl}
+              playing={props.playState}
+              setPlayState={props.setPlayState}
             />
           );
         })

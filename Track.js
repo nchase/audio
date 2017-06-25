@@ -8,16 +8,12 @@ module.exports = class Track extends React.Component {
 
       this.props.setActiveAudioEl(this.refs.audioEl);
 
-      this.setState({
-        playing: true
-      });
+      this.props.setPlayState(true);
 
       return this.refs.audioEl.play();
     }
 
-    this.setState({
-      playing: false
-    });
+    this.props.setPlayState(false);
 
     return this.refs.audioEl.pause();
   }
@@ -29,7 +25,7 @@ module.exports = class Track extends React.Component {
   }
 
   changeCurrentTime(event) {
-    if (!this.state.playing) {
+    if (!this.props.playing) {
       return false;
     }
 
@@ -72,7 +68,7 @@ module.exports = class Track extends React.Component {
   }
 
   renderPlayState() {
-    if (this.state.playing) {
+    if (this.props.playing) {
       return '▌▌';
     }
 
