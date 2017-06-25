@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var _ = require('lodash');
 var TrackList = require('./TrackList');
 var Graphic = require('./Graphic');
 
@@ -61,13 +62,22 @@ module.exports = class App extends React.Component {
 function drawUpdate(analyser, filter) {
   var dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-  analyser.getByteTimeDomainData(dataArray);
+  analyser.getByteFrequencyData(dataArray);
 
-  for(var i = 0; i < analyser.frequencyBinCount; i++) {
-    var desired = Math.sin((dataArray[i] - 130));
+  // 1. `nvalue` for "normalized value" - since we're passing it through
+  //    `Math.sin` we should always get something between -1 and 1
+  // 2. `dataArray[3] should give us something fairly low on the spectrum,
+  //    but not the absolute bottom:
+  var nvalue = Math.sin(dataArray[5]);
 
-    filter.red = [desired * -5 , desired ];
-    filter.green = [desired * 2, desired ];
-    filter.blue = [-desired * 2 , desired ];
-  }
+  updateFilter(nvalue, filter);
 }
+
+function updateFilter (value, filter) {
+  logger(value);
+
+  filter.red = [-value * 3, value];
+  filter.green = [value, value];
+}
+
+var logger = _.throttle(function(value) {console.log(value) }, 60);
