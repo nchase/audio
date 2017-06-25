@@ -28,6 +28,12 @@ module.exports = class App extends React.Component {
     processor.connect(audioSource.context.destination);
   }
 
+  setPlayState(playState) {
+    this.setState({
+      playing: playState
+    });
+  }
+
   setActiveAudioEl(audioEl) {
     this.setState({
       activeAudioEl: audioEl
@@ -53,6 +59,8 @@ module.exports = class App extends React.Component {
         <TrackList
           tracks={this.props.tracks}
           setActiveAudioEl={this.setActiveAudioEl.bind(this)}
+          setPlayState={this.setPlayState.bind(this)}
+          playing={this.state.playing}
         />
       </div>
     );
@@ -60,6 +68,9 @@ module.exports = class App extends React.Component {
 };
 
 function drawUpdate(analyser, filter) {
+  if (!this.state.playing) {
+    return false;
+  }
   var dataArray = new Uint8Array(analyser.frequencyBinCount);
 
   analyser.getByteFrequencyData(dataArray);
