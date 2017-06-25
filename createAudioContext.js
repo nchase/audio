@@ -1,8 +1,8 @@
-module.exports = function createAudioContext() {
+module.exports = function createAudioContext(audioSource) {
   var audioContext = new (window.AudioContext || window.webkitAudioContext);
 
   if (!window.audioSource) {
-    var audioSource = window.audioSource = Object.assign(audioContext.createMediaElementSource(document.getElementById('audio')));
+    var audioSource = window.audioSource = Object.assign(audioContext.createMediaElementSource(audioSource));
   }
 
   var processor;
