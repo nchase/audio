@@ -15,9 +15,6 @@ module.exports = class App extends React.Component {
 
     this.wireGraph(audio.audioSource, audio.processor, audio.analyser);
 
-    this.analyser = audio.analyser;
-
-
     audio.processor.onaudioprocess = drawUpdate.bind(this, audio.analyser, this.refs.graphic.refs.graphic.sprite.filters[0]);
 
     return Promise.resolve(audio.audioSource);
