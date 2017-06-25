@@ -48,7 +48,6 @@ module.exports = class App extends React.Component {
           ref="graphic"
           className="db center"
           src={this.props.imageSrc}
-          drawUpdate={drawUpdate}
         />
         <TrackList
           tracks={this.props.tracks}
