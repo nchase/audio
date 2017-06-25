@@ -11,9 +11,6 @@ ReactDOM.render(
       "./audio/06-10-2017.mp3",
       "./audio/lies-loop.mp3"
     ]}
-  />, document.getElementById('app'),
-  function() {
-    var audioApp = require('./audioApp');
-    var graphicsApp = require('./graphicsApp');
-  }
+  />,
+  document.getElementById('app')
 )
