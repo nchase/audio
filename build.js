@@ -16,9 +16,6 @@ module.exports = class App extends React.Component {
 
     this.wireGraph(audio.audioSource, audio.processor, audio.analyser);
 
-    this.analyser = audio.analyser;
-
-
     audio.processor.onaudioprocess = drawUpdate.bind(this, audio.analyser, this.refs.graphic.refs.graphic.sprite.filters[0]);
 
     return Promise.resolve(audio.audioSource);
@@ -269,27 +266,33 @@ module.exports = function TrackList (props) {
 
 },{"./Track":3,"react":370,"react-dom":218}],5:[function(require,module,exports){
 module.exports = function createAudioContext(audioSource) {
-  var audioContext = new (window.AudioContext || window.webkitAudioContext);
 
-  if (!window.audioSource) {
-    var audioSource = window.audioSource = Object.assign(audioContext.createMediaElementSource(audioSource));
+  if (!window.audioSources) {
+    window.audioContext = new (window.AudioContext || window.webkitAudioContext);
+    window.audioSources = {};
   }
+
+  if (!window.audioSources[audioSource.src]) {
+    window.audioSources[audioSource.src] = Object.assign(window.audioContext.createMediaElementSource(audioSource));
+  }
+
+  var audioSource = window.audioSources[audioSource.src];
 
   var processor;
 
   try {
-    processor = audioContext.createScriptProcessor();
+    processor = audioSource.context.createScriptProcessor();
   } catch(error) {
-    processor = audioContext.createScriptProcessor(4096);
+    processor = audioSource.context.createScriptProcessor(4096);
   }
 
-  var analyser = audioContext.createAnalyser();
+  var analyser = audioSource.context.createAnalyser();
 
 
   analyser.fftSize = 32;
 
 
-  return {audioContext, audioSource: window.audioSource, processor, analyser}
+  return {audioContext, audioSource: audioSource, processor, analyser}
 }
 
 },{}],6:[function(require,module,exports){
