@@ -23,5 +23,9 @@ module.exports = function createAudioContext(audioEl) {
   analyser.fftSize = 32;
 
 
+  audioContext.gainNode = audioContext.createGain();
+  window.audioSources[audioEl.src].connect(audioContext.gainNode)
+  audioContext.gainNode.connect(audioContext.destination);
+
   return {audioContext, audioSource: window.audioSources[audioEl.src], processor, analyser}
 }

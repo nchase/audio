@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var _ = require('lodash');
 var TrackList = require('./TrackList');
 var Graphic = require('./Graphic');
+var Slider = require('./Slider');
 
 module.exports = class App extends React.Component {
   constructor(props) {
@@ -12,13 +13,13 @@ module.exports = class App extends React.Component {
   }
 
   setupAudio(drawUpdate) {
-    var audio = require('./createAudioContext')(this.state.activeAudioEl);
+    this.setState({
+      audio: require('./createAudioContext')(this.state.activeAudioEl)
+    }, function() {
+      this.wireGraph(this.state.audio.audioSource, this.state.audio.processor, this.state.audio.analyser);
 
-    this.wireGraph(audio.audioSource, audio.processor, audio.analyser);
-
-    audio.processor.onaudioprocess = drawUpdate.bind(this, audio.analyser, this.refs.graphic.refs.graphic.sprite.filters[0]);
-
-    return Promise.resolve(audio.audioSource);
+      this.state.audio.processor.onaudioprocess = drawUpdate.bind(this, this.state.audio.analyser, this.refs.graphic.refs.graphic.sprite.filters[0]);
+    }.bind(this));
   }
 
   wireGraph(audioSource, processor, analyser) {
@@ -61,6 +62,11 @@ module.exports = class App extends React.Component {
           setActiveAudioEl={this.setActiveAudioEl.bind(this)}
           setPlayState={this.setPlayState.bind(this)}
           playing={this.state.playing}
+        />
+        <Slider
+          target={this.state.audio && this.state.audio.audioContext.gainNode.gain}
+          defaultValue={0}
+          max={11}
         />
       </div>
     );
