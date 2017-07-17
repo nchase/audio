@@ -9,7 +9,6 @@ ReactDOM.render(
     imageSrc="./images/IMG_0204_resized.jpg"
     tracks={[
       "./audio/06-10-2017.mp3",
-      "./audio/lies-loop.mp3"
     ]}
   />,
   document.getElementById('app')
