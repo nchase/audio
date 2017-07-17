@@ -51,6 +51,10 @@ module.exports = class Track extends React.Component {
     this.refs.audioEl.volume = 0.25
   }
 
+  componentWillUnmount() {
+    this.refs.audioEl.removeEventListener('timeupdate');
+  }
+
   renderCurrentTime() {
     if (!this.refs.audioEl) {
       return '00:00';
