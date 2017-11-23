@@ -4,6 +4,7 @@ var _ = require('lodash');
 var TrackList = require('./TrackList');
 var Graphic = require('./Graphic');
 var Slider = require('./Slider');
+var average = require('analyser-frequency-average');
 
 module.exports = class App extends React.Component {
   constructor(props) {
@@ -81,18 +82,20 @@ function drawUpdate(analyser, filter) {
 
   analyser.getByteFrequencyData(dataArray);
 
-  // 1. `nvalue` for "normalized value" - since we're passing it through
-  //    `Math.sin` we should always get something between -1 and 1
-  // 2. `dataArray[3] should give us something fairly low on the spectrum,
-  //    but not the absolute bottom:
-  var nvalue = Math.sin(dataArray[5]);
+  // this should be per-track configuration:
+  var minHz = 512
+  var maxHz = 2400
 
-  updateFilter(nvalue, filter);
+  var avg = average(analyser, dataArray, minHz, maxHz);
+
+
+  updateFilter(avg, filter)
 }
 
 function updateFilter (value, filter) {
-  filter.red = [-value * 3, value];
+  filter.red = [value * -20, 0];
   filter.green = [value, value];
+  filter.blue = [value, value];
 }
 
 var logger = _.throttle(function(value) {console.log(value) }, 60);

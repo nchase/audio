@@ -20,7 +20,7 @@ module.exports = function createAudioContext(audioEl) {
   var analyser = window.audioSources[audioEl.src].context.createAnalyser();
 
 
-  analyser.fftSize = 32;
+  analyser.fftSize = 4096;
 
 
   audioContext.gainNode = audioContext.createGain();
