@@ -6,7 +6,7 @@ module.exports = class Track extends React.Component {
   changePlayback() {
     if (this.refs.audioEl.paused) {
 
-      this.props.setActiveAudioEl(this.refs.audioEl);
+      this.props.setActiveTrack(this.refs.audioEl, this.props);
 
       this.props.setPlayState(true);
 
