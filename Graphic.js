@@ -10,11 +10,8 @@ module.exports = class Graphic extends React.Component {
     this.animate = this.animate.bind(this);
   }
 
-  componentDidMount() {
-    this.renderer = PIXI.autoDetectRenderer(640, 500);
-    this.refs.graphic.appendChild(this.renderer.view);
-
-    var graphic = this.refs.graphic.sprite = PIXI.Sprite.fromImage(this.props.src);
+  handleGraphicUpdate(src) {
+    var graphic = this.refs.graphic.sprite = PIXI.Sprite.fromImage(src);
     graphic.scale.x = 0.8;
     graphic.scale.y = 0.8;
     graphic.filters = [new PIXI.filters.RGBSplitFilter()]
@@ -22,6 +19,19 @@ module.exports = class Graphic extends React.Component {
 
     this.stage = new PIXI.Container();
     this.stage.addChild(graphic);
+
+    return graphic;
+  }
+
+  componentWillUpdate() {
+    this.handleGraphicUpdate(this.props.src);
+  }
+
+  componentDidMount() {
+    this.renderer = PIXI.autoDetectRenderer(640, 500);
+    this.refs.graphic.appendChild(this.renderer.view);
+
+    this.handleGraphicUpdate(this.props.src);
 
     this.animate();
   }
