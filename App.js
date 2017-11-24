@@ -10,7 +10,11 @@ module.exports = class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      activeTrack: {
+        props: {}
+      }
+    };
   }
 
   setupAudio(drawUpdate) {
@@ -59,7 +63,7 @@ module.exports = class App extends React.Component {
         <Graphic
           ref="graphic"
           className="db center"
-          src={this.props.imageSrc}
+          src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
         />
         <TrackList
           tracks={this.props.tracks}
