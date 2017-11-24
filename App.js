@@ -15,7 +15,7 @@ module.exports = class App extends React.Component {
 
   setupAudio(drawUpdate) {
     this.setState({
-      audio: require('./createAudioContext')(this.state.activeAudioEl)
+      audio: require('./createAudioContext')(this.state.activeTrack.audioEl)
     }, function() {
       this.wireGraph(this.state.audio.audioSource, this.state.audio.processor, this.state.audio.analyser);
 
@@ -36,9 +36,12 @@ module.exports = class App extends React.Component {
     });
   }
 
-  setActiveAudioEl(audioEl) {
+  setActiveTrack(audioEl, trackProps) {
     this.setState({
-      activeAudioEl: audioEl
+      activeTrack: {
+        props: trackProps,
+        audioEl
+      }
     }, function() {
       this.setupAudio(drawUpdate);
     });
@@ -60,7 +63,7 @@ module.exports = class App extends React.Component {
         />
         <TrackList
           tracks={this.props.tracks}
-          setActiveAudioEl={this.setActiveAudioEl.bind(this)}
+          setActiveTrack={this.setActiveTrack.bind(this)}
           setPlayState={this.setPlayState.bind(this)}
           playing={this.state.playing}
         />
@@ -82,12 +85,10 @@ function drawUpdate(analyser, filter) {
 
   analyser.getByteFrequencyData(dataArray);
 
-  // this should be per-track configuration:
-  var minHz = 512
-  var maxHz = 2400
+  var minHz = this.state.activeTrack.props.minHz || 512
+  var maxHz = this.state.activeTrack.props.maxHz || 2400
 
   var avg = average(analyser, dataArray, minHz, maxHz);
-
 
   updateFilter(avg, filter)
 }

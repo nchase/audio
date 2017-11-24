@@ -8,15 +8,16 @@ module.exports = function TrackList (props) {
       className="pv5 center"
     >
       {
-        props.tracks.map(function(src, index) {
+        props.tracks.map(function(track, index) {
           return (
             <Track
-              key={src}
-              src={src}
+              key={track.source}
+              src={track.source}
               index={index + 1}
-              setActiveAudioEl={props.setActiveAudioEl}
+              setActiveTrack={props.setActiveTrack}
               playing={props.playing}
               setPlayState={props.setPlayState}
+              {...track}
             />
           );
         })
