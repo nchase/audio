@@ -7,9 +7,7 @@ module.exports = function Slider (props) {
     <input
       type="range"
       onChange={_.partialRight(onChange, props.target)}
-      min={props.min}
-      max={props.max}
-      defaultValue={props.defaultValue}
+      {...props}
     />
   );
 };

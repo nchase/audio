@@ -4,17 +4,22 @@ var _ = require('lodash');
 var TrackList = require('./TrackList');
 var Graphic = require('./Graphic');
 var Slider = require('./Slider');
+var average = require('analyser-frequency-average');
 
 module.exports = class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      activeTrack: {
+        props: {}
+      }
+    };
   }
 
   setupAudio(drawUpdate) {
     this.setState({
-      audio: require('./createAudioContext')(this.state.activeAudioEl)
+      audio: require('./createAudioContext')(this.state.activeTrack.audioEl)
     }, function() {
       this.wireGraph(this.state.audio.audioSource, this.state.audio.processor, this.state.audio.analyser);
 
@@ -24,20 +29,26 @@ module.exports = class App extends React.Component {
 
   wireGraph(audioSource, processor, analyser) {
     audioSource.connect(analyser);
-    audioSource.connect(audioSource.context.destination);
-
     processor.connect(audioSource.context.destination);
   }
 
-  setPlayState(playState) {
-    this.setState({
-      playing: playState
-    });
+  togglePlayback() {
+    if (this.state.activeTrack.audioEl.paused) {
+
+      window.audioContext && window.audioContext.resume();
+      return this.state.activeTrack.audioEl.play();
+    }
+
+    window.audioContext && window.audioContext.suspend();
+    return this.state.activeTrack.audioEl.pause();
   }
 
-  setActiveAudioEl(audioEl) {
+  setActiveTrack(audioEl, trackProps) {
     this.setState({
-      activeAudioEl: audioEl
+      activeTrack: {
+        props: trackProps,
+        audioEl
+      }
     }, function() {
       this.setupAudio(drawUpdate);
     });
@@ -49,24 +60,32 @@ module.exports = class App extends React.Component {
       <div className="pv4 pa2 pa4-l center app">
         <div
           className="tr f4 pb4"
+          contentEditable
         >
           Title
         </div>
-        <Graphic
-          ref="graphic"
-          className="db center"
-          src={this.props.imageSrc}
-        />
+        <div className="flex">
+          <Graphic
+            ref="graphic"
+            className="db center pointer"
+            src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
+            onClick={this.togglePlayback.bind(this)}
+          />
+          <Slider
+            className="slider slider--vertical w1 h-25 self-end
+"
+            target={this.state.audio && this.state.audio.audioContext.gainNode.gain}
+            min={0.0}
+            defaultValue={0.5}
+            max={1.0}
+            step={0.1}
+          />
+        </div>
         <TrackList
+          className="pv4 center"
           tracks={this.props.tracks}
-          setActiveAudioEl={this.setActiveAudioEl.bind(this)}
-          setPlayState={this.setPlayState.bind(this)}
-          playing={this.state.playing}
-        />
-        <Slider
-          target={this.state.audio && this.state.audio.audioContext.gainNode.gain}
-          defaultValue={0}
-          max={11}
+          setActiveTrack={this.setActiveTrack.bind(this)}
+          togglePlayback={this.togglePlayback.bind(this)}
         />
       </div>
     );
@@ -74,25 +93,22 @@ module.exports = class App extends React.Component {
 };
 
 function drawUpdate(analyser, filter) {
-  if (!this.state.playing) {
-    return false;
-  }
   var dataArray = new Uint8Array(analyser.frequencyBinCount);
 
   analyser.getByteFrequencyData(dataArray);
 
-  // 1. `nvalue` for "normalized value" - since we're passing it through
-  //    `Math.sin` we should always get something between -1 and 1
-  // 2. `dataArray[3] should give us something fairly low on the spectrum,
-  //    but not the absolute bottom:
-  var nvalue = Math.sin(dataArray[5]);
+  var minHz = this.state.activeTrack.props.minHz || 512
+  var maxHz = this.state.activeTrack.props.maxHz || 2400
 
-  updateFilter(nvalue, filter);
+  var avg = average(analyser, dataArray, minHz, maxHz);
+
+  updateFilter(avg, filter)
 }
 
 function updateFilter (value, filter) {
-  filter.red = [-value * 3, value];
+  filter.red = [value * -20, 0];
   filter.green = [value, value];
+  filter.blue = [value, value];
 }
 
-var logger = _.throttle(function(value) {console.log(value) }, 60);
+var logger = _.throttle((...args) => { console.log(args) }, 60);

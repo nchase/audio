@@ -3,21 +3,6 @@ var ReactDOM = require('react-dom');
 var moment = require('moment');
 
 module.exports = class Track extends React.Component {
-  changePlayback() {
-    if (this.refs.audioEl.paused) {
-
-      this.props.setActiveAudioEl(this.refs.audioEl);
-
-      this.props.setPlayState(true);
-
-      return this.refs.audioEl.play();
-    }
-
-    this.props.setPlayState(false);
-
-    return this.refs.audioEl.pause();
-  }
-
   handleTimeUpdate(event) {
     this.setState({
       progress: `${this.refs.audioEl.currentTime / this.refs.audioEl.duration * 100}%`
@@ -48,7 +33,7 @@ module.exports = class Track extends React.Component {
 
   componentDidMount() {
     this.refs.audioEl.addEventListener('timeupdate', this.handleTimeUpdate.bind(this));
-    this.refs.audioEl.volume = 0.25
+    this.props.setActiveTrack(this.refs.audioEl, this.props)
   }
 
   componentWillUnmount() {
@@ -68,39 +53,56 @@ module.exports = class Track extends React.Component {
       return '00:00';
     }
 
+    if (!this.refs.audioEl.duration) {
+      return '00:00';
+    }
+
     return `${moment.utc(this.refs.audioEl.duration * 1000).format('mm:ss')}`;
   }
 
   renderPlayState() {
     if (this.refs.audioEl && !this.refs.audioEl.paused) {
-      return '▌▌';
+      return '-';
     }
 
-    return '►'
+    return '>'
   }
 
   render() {
     return (
       <div
-        className="pointer flex items-center justify-between mb3"
+        className="pointer flex-ns items-center justify-between mb3"
       >
         <div
-          onClick={this.changePlayback.bind(this)}
+          onClick={function() {
+            this.props.togglePlayback()
+          }.bind(this)}
+          className="flex w-100"
         >
-          <span className="mr3 dib">
+          <div
+            className="mr3"
+            style={{
+              fontFamily: 'monospace',
+              fontSize: '16px'
+            }}
+          >
             {this.renderPlayState()}
-          </span>
+          </div>
 
-          Track {this.props.index}
+          <div className="w-100">
+            Track {this.props.index}
+          </div>
+
+          <div className="w-100 nowrap">
+            {
+              `${this.renderCurrentTime()}
+               /
+               ${this.renderDuration()}`
+            }
+          </div>
         </div>
-        {
-          `${this.renderCurrentTime()}
-           /
-           ${this.renderDuration()}`
-        }
         <div
-          className="w-50 bg-gray"
-          style={{height: '12px' }}
+          className="bg-gray w-100 h1"
           onMouseDown={this.changeCurrentTime.bind(this)}
         >
           <div
@@ -114,6 +116,7 @@ module.exports = class Track extends React.Component {
           ref="audioEl"
           className="dn"
           src={this.props.src}
+          data-default-gain={this.props.defaultGain}
           loop
           controls
         />

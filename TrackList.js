@@ -5,18 +5,18 @@ var Track = require('./Track');
 module.exports = function TrackList (props) {
   return (
     <div
-      className="pv5 center"
+      className={props.className}
     >
       {
-        props.tracks.map(function(src, index) {
+        props.tracks.map(function(track, index) {
           return (
             <Track
-              key={src}
-              src={src}
+              key={track.source}
+              src={track.source}
               index={index + 1}
-              setActiveAudioEl={props.setActiveAudioEl}
-              playing={props.playing}
-              setPlayState={props.setPlayState}
+              setActiveTrack={props.setActiveTrack}
+              togglePlayback={props.togglePlayback}
+              {...track}
             />
           );
         })
