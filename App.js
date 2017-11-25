@@ -57,6 +57,7 @@ module.exports = class App extends React.Component {
       <div className="pv4 pa2 pa4-l center app">
         <div
           className="tr f4 pb4"
+          contentEditable
         >
           Title
         </div>
