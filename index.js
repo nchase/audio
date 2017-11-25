@@ -12,11 +12,6 @@ ReactDOM.render(
         minHz: 512,
         maxHz: 2400,
         source: "./audio/06-10-2017.mp3",
-      },
-      {
-        minHz: 0,
-        maxHz: 1200,
-        source: "./audio/lies-loop.mp3"
       }
     ]}
   />,
