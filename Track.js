@@ -10,11 +10,13 @@ module.exports = class Track extends React.Component {
 
       this.props.setPlayState(true);
 
+      window.audioContext && window.audioContext.resume();
       return this.refs.audioEl.play();
     }
 
     this.props.setPlayState(false);
 
+    window.audioContext && window.audioContext.suspend();
     return this.refs.audioEl.pause();
   }
 
