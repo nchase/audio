@@ -111,4 +111,4 @@ function updateFilter (value, filter) {
   filter.blue = [value, value];
 }
 
-var logger = _.throttle(function(value) {console.log(value) }, 60);
+var logger = _.throttle(function(...args) {console.log(args) }, 60);
