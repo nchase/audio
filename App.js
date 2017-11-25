@@ -29,8 +29,6 @@ module.exports = class App extends React.Component {
 
   wireGraph(audioSource, processor, analyser) {
     audioSource.connect(analyser);
-    audioSource.connect(audioSource.context.destination);
-
     processor.connect(audioSource.context.destination);
   }
 
