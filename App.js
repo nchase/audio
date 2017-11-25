@@ -70,8 +70,10 @@ module.exports = class App extends React.Component {
             className="slider slider--vertical w1 h-25 self-end
 "
             target={this.state.audio && this.state.audio.audioContext.gainNode.gain}
-            defaultValue={0}
-            max={11}
+            min={0.0}
+            defaultValue={0.5}
+            max={1.0}
+            step={0.1}
           />
         </div>
         <TrackList

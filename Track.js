@@ -114,6 +114,7 @@ module.exports = class Track extends React.Component {
           ref="audioEl"
           className="dn"
           src={this.props.src}
+          data-default-gain={this.props.defaultGain}
           loop
           controls
         />

@@ -24,6 +24,7 @@ module.exports = function createAudioContext(audioEl) {
 
 
   audioContext.gainNode = audioContext.createGain();
+  audioContext.gainNode.gain.value = audioEl.dataset.defaultGain || 0.5
   window.audioSources[audioEl.src].connect(audioContext.gainNode)
   audioContext.gainNode.connect(audioContext.destination);
 
