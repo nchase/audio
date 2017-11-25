@@ -60,21 +60,25 @@ module.exports = class App extends React.Component {
         >
           Title
         </div>
-        <Graphic
-          ref="graphic"
-          className="db center"
-          src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
-        />
+        <div className="flex">
+          <Graphic
+            ref="graphic"
+            className="db center"
+            src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
+          />
+          <Slider
+            className="slider slider--vertical w1 h-25 self-end
+"
+            target={this.state.audio && this.state.audio.audioContext.gainNode.gain}
+            defaultValue={0}
+            max={11}
+          />
+        </div>
         <TrackList
           tracks={this.props.tracks}
           setActiveTrack={this.setActiveTrack.bind(this)}
           setPlayState={this.setPlayState.bind(this)}
           playing={this.state.playing}
-        />
-        <Slider
-          target={this.state.audio && this.state.audio.audioContext.gainNode.gain}
-          defaultValue={0}
-          max={11}
         />
       </div>
     );

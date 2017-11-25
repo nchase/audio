@@ -14,3 +14,9 @@ body {
 .app {
   max-width: 700px;
 }
+
+.slider--vertical {
+  -webkit-appearance: slider-vertical;
+  appearance: slider-vertical;
+  writing-mode: bt-lr;
+}
