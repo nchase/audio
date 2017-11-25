@@ -34,10 +34,15 @@ module.exports = class App extends React.Component {
     processor.connect(audioSource.context.destination);
   }
 
-  setPlayState(playState) {
-    this.setState({
-      playing: playState
-    });
+  togglePlayback() {
+    if (this.state.activeTrack.audioEl.paused) {
+
+      window.audioContext && window.audioContext.resume();
+      return this.state.activeTrack.audioEl.play();
+    }
+
+    window.audioContext && window.audioContext.suspend();
+    return this.state.activeTrack.audioEl.pause();
   }
 
   setActiveTrack(audioEl, trackProps) {
@@ -64,8 +69,9 @@ module.exports = class App extends React.Component {
         <div className="flex">
           <Graphic
             ref="graphic"
-            className="db center"
+            className="db center pointer"
             src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
+            onClick={this.togglePlayback.bind(this)}
           />
           <Slider
             className="slider slider--vertical w1 h-25 self-end
@@ -81,8 +87,7 @@ module.exports = class App extends React.Component {
           className="pv4 center"
           tracks={this.props.tracks}
           setActiveTrack={this.setActiveTrack.bind(this)}
-          setPlayState={this.setPlayState.bind(this)}
-          playing={this.state.playing}
+          togglePlayback={this.togglePlayback.bind(this)}
         />
       </div>
     );
@@ -90,9 +95,6 @@ module.exports = class App extends React.Component {
 };
 
 function drawUpdate(analyser, filter) {
-  if (!this.state.playing) {
-    return false;
-  }
   var dataArray = new Uint8Array(analyser.frequencyBinCount);
 
   analyser.getByteFrequencyData(dataArray);

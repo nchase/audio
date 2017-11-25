@@ -3,23 +3,6 @@ var ReactDOM = require('react-dom');
 var moment = require('moment');
 
 module.exports = class Track extends React.Component {
-  changePlayback() {
-    if (this.refs.audioEl.paused) {
-
-      this.props.setActiveTrack(this.refs.audioEl, this.props);
-
-      this.props.setPlayState(true);
-
-      window.audioContext && window.audioContext.resume();
-      return this.refs.audioEl.play();
-    }
-
-    this.props.setPlayState(false);
-
-    window.audioContext && window.audioContext.suspend();
-    return this.refs.audioEl.pause();
-  }
-
   handleTimeUpdate(event) {
     this.setState({
       progress: `${this.refs.audioEl.currentTime / this.refs.audioEl.duration * 100}%`
@@ -50,7 +33,7 @@ module.exports = class Track extends React.Component {
 
   componentDidMount() {
     this.refs.audioEl.addEventListener('timeupdate', this.handleTimeUpdate.bind(this));
-    this.refs.audioEl.volume = 0.25
+    this.props.setActiveTrack(this.refs.audioEl, this.props)
   }
 
   componentWillUnmount() {
@@ -67,6 +50,10 @@ module.exports = class Track extends React.Component {
 
   renderDuration() {
     if (!this.refs.audioEl) {
+      return '00:00';
+    }
+
+    if (!this.refs.audioEl.duration) {
       return '00:00';
     }
 
@@ -87,7 +74,9 @@ module.exports = class Track extends React.Component {
         className="pointer flex-ns items-center justify-between mb3"
       >
         <div
-          onClick={this.changePlayback.bind(this)}
+          onClick={function() {
+            this.props.togglePlayback()
+          }.bind(this)}
           className="flex w-100"
         >
           <div
