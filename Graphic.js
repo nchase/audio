@@ -43,7 +43,10 @@ module.exports = class Graphic extends React.Component {
 
   render() {
     return (
-      <div ref="graphic" />
+      <div
+        ref="graphic"
+        {...this.props}
+      />
     );
   }
 };

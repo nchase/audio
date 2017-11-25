@@ -15,8 +15,7 @@ module.exports = function TrackList (props) {
               src={track.source}
               index={index + 1}
               setActiveTrack={props.setActiveTrack}
-              playing={props.playing}
-              setPlayState={props.setPlayState}
+              togglePlayback={props.togglePlayback}
               {...track}
             />
           );
