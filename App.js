@@ -75,6 +75,7 @@ module.exports = class App extends React.Component {
           />
         </div>
         <TrackList
+          className="pv5 center"
           tracks={this.props.tracks}
           setActiveTrack={this.setActiveTrack.bind(this)}
           setPlayState={this.setPlayState.bind(this)}

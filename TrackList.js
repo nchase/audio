@@ -5,7 +5,7 @@ var Track = require('./Track');
 module.exports = function TrackList (props) {
   return (
     <div
-      className="pv5 center"
+      className={props.className}
     >
       {
         props.tracks.map(function(track, index) {
