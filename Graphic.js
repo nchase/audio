@@ -12,8 +12,8 @@ module.exports = class Graphic extends React.Component {
 
   handleGraphicUpdate(src) {
     var graphic = this.refs.graphic.sprite = PIXI.Sprite.fromImage(src);
-    graphic.scale.x = 0.8;
-    graphic.scale.y = 0.8;
+    graphic.width = this.windowWidth;
+    graphic.height= this.windowHeight;
     graphic.filters = [new PIXI.filters.RGBSplitFilter()]
     graphic.filters[0].red = graphic.filters[0].blue = graphic.filters[0].green = [0, 0];
 
@@ -28,7 +28,11 @@ module.exports = class Graphic extends React.Component {
   }
 
   componentDidMount() {
-    this.renderer = PIXI.autoDetectRenderer(640, 500);
+    this.windowWidth = calculateWidth(window.innerWidth);
+
+    this.windowHeight = calculateHeight(this.windowWidth);
+
+    this.renderer = PIXI.autoDetectRenderer(this.windowWidth, this.windowHeight);
     this.refs.graphic.appendChild(this.renderer.view);
 
     this.handleGraphicUpdate(this.props.src);
@@ -50,3 +54,15 @@ module.exports = class Graphic extends React.Component {
     );
   }
 };
+
+function calculateWidth(windowWidth) {
+  if (windowWidth >= 640) {
+    return 640;
+  }
+
+  return window.innerWidth - 32;
+}
+
+function calculateHeight(width) {
+  return width * 0.78125;
+}
