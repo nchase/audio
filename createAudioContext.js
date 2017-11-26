@@ -14,13 +14,13 @@ module.exports = function createAudioContext(audioEl) {
   try {
     processor = window.audioSources[audioEl.src].context.createScriptProcessor();
   } catch(error) {
-    processor = window.audioSources[audioEl.src].context.createScriptProcessor(4096);
+    processor = window.audioSources[audioEl.src].context.createScriptProcessor(Math.pow(2, 11));
   }
 
   var analyser = window.audioSources[audioEl.src].context.createAnalyser();
 
 
-  analyser.fftSize = 4096;
+  analyser.fftSize = Math.pow(2, 11);
 
 
   audioContext.gainNode = audioContext.createGain();
