@@ -70,6 +70,7 @@ module.exports = class App extends React.Component {
             className="db center pointer"
             src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
             onClick={this.togglePlayback.bind(this)}
+            onTouchStart={this.togglePlayback.bind(this)}
           />
           <Slider
             className="slider slider--vertical w1 h-25 self-end
