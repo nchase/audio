@@ -79,7 +79,7 @@ module.exports = class App extends React.Component {
             min={0.0}
             defaultValue={0.5}
             max={1.0}
-            step={0.1}
+            step={0.01}
           />
         </div>
         <TrackList
