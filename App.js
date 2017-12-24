@@ -103,6 +103,8 @@ function drawUpdate(analyser, filter) {
 
   var avg = average(analyser, dataArray, minHz, maxHz);
 
+  logger(avg);
+
   updateFilter(avg, filter)
 }
 
@@ -112,4 +114,4 @@ function updateFilter (value, filter) {
   filter.blue = [value, value];
 }
 
-var logger = _.throttle((...args) => { console.log(args) }, 60);
+var logger = _.throttle((...args) => { console.debug(args) }, 60);
