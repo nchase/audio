@@ -7,13 +7,6 @@ var App = require('./App');
 ReactDOM.render(
   <App
     imageSrc="./images/IMG_0204_resized.jpg"
-    tracks={[
-      {
-        minHz: 512,
-        maxHz: 2400,
-        source: "./audio/06-10-2017.mp3",
-      }
-    ]}
   />,
   document.getElementById('app')
 )
