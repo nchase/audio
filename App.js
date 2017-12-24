@@ -18,12 +18,14 @@ module.exports = class App extends React.Component {
   }
 
   setupAudio(drawUpdate) {
-    this.setState({
-      audio: require('./createAudioContext')(this.state.activeTrack.audioEl)
-    }, function() {
-      this.wireGraph(this.state.audio.audioSource, this.state.audio.processor, this.state.audio.analyser);
+    require('./createAudioContext')(this.state.activeTrack.audioEl).then(function(auCtx) {
+      this.setState({
+        audio: auCtx
+      }, function() {
+        this.wireGraph(this.state.audio.audioSource, this.state.audio.processor, this.state.audio.analyser);
 
-      this.state.audio.processor.onaudioprocess = drawUpdate.bind(this, this.state.audio.analyser, this.refs.graphic.refs.graphic.sprite.filters[0]);
+        this.state.audio.processor.onaudioprocess = drawUpdate.bind(this, this.state.audio.analyser, this.refs.graphic.refs.graphic.sprite.filters[0]);
+      }.bind(this));
     }.bind(this));
   }
 
@@ -55,6 +57,12 @@ module.exports = class App extends React.Component {
 
   }
 
+  componentWillMount() {
+    if (!this.props.tracks || this.props.tracks.length === 0) {
+      return this.setActiveTrack(new Audio);
+    }
+  }
+
   render() {
     return (
       <div className="pv4 pa2 pa4-l center app">
@@ -68,7 +76,7 @@ module.exports = class App extends React.Component {
           <Graphic
             ref="graphic"
             className="db center pointer"
-            src={this.state.activeTrack.props.imageSrc || this.props.imageSrc}
+            src={this.state.activeTrack.props && this.state.activeTrack.props.imageSrc || this.props.imageSrc}
             onClick={this.togglePlayback.bind(this)}
             onTouchStart={this.togglePlayback.bind(this)}
           />
@@ -98,10 +106,12 @@ function drawUpdate(analyser, filter) {
 
   analyser.getByteFrequencyData(dataArray);
 
-  var minHz = this.state.activeTrack.props.minHz || 512
-  var maxHz = this.state.activeTrack.props.maxHz || 2400
+  var minHz = this.state.activeTrack.props && this.state.activeTrack.props.minHz || 1
+  var maxHz = this.state.activeTrack.props && this.state.activeTrack.props.maxHz || 20000
 
   var avg = average(analyser, dataArray, minHz, maxHz);
+
+  logger(avg);
 
   updateFilter(avg, filter)
 }
@@ -112,4 +122,4 @@ function updateFilter (value, filter) {
   filter.blue = [value, value];
 }
 
-var logger = _.throttle((...args) => { console.log(args) }, 60);
+var logger = _.throttle((...args) => { console.debug(args) }, 60);

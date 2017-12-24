@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify index.js -t browserify-css -t reactify > build.js",
-    "watch": "watchify index.js -t browserify-css -t reactify -p [ livereactload ] -o build.js",
+    "build": "browserify index.js -t browserify-css -t babelify > build.js",
+    "watch": "watchify index.js -t browserify-css -t babelify -p [ livereactload ] -o build.js",
     "start": "concurrently \"node server.js\" \"npm run watch\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "publish": "./publish"
@@ -14,6 +14,11 @@
   "license": "ISC",
   "dependencies": {
     "analyser-frequency-average": "^1.0.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^8.0.0",
     "browserify": "^14.4.0",
     "browserify-css": "^0.10.1",
     "concurrently": "^3.5.0",
@@ -27,7 +32,6 @@
     "pixi.js": "^4.6.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "reactify": "^1.1.1",
     "tachyons": "^4.7.4",
     "watchify": "^3.9.0"
   }
