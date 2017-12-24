@@ -3,6 +3,10 @@ var ReactDOM = require('react-dom');
 var Track = require('./Track');
 
 module.exports = function TrackList (props) {
+  if (!props.tracks) {
+    return null;
+  }
+
   return (
     <div
       className={props.className}

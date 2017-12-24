@@ -1,12 +1,19 @@
-module.exports = function createAudioContext(audioEl) {
+module.exports = async function createAudioContext(audioEl) {
 
   if (!window.audioSources) {
     window.audioContext = new (window.AudioContext || window.webkitAudioContext);
     window.audioSources = {};
   }
 
-  if (!window.audioSources[audioEl.src]) {
-    window.audioSources[audioEl.src] = Object.assign(window.audioContext.createMediaElementSource(audioEl));
+  let source = audioEl;
+
+  if (!document.body.contains(audioEl)) {
+    source = await navigator.mediaDevices.getUserMedia({audio: true})
+    window.audioSources[audioEl.src] = Object.assign(window.audioContext.createMediaStreamSource(source));
+  } else {
+    if (!window.audioSources[audioEl.src]) {
+      window.audioSources[audioEl.src] = Object.assign(window.audioContext.createMediaElementSource(source))
+    }
   }
 
   var processor;
