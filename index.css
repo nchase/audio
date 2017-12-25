@@ -9,9 +9,10 @@
 }
 
 body {
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: green;
   font-family: 'Work Sans', Arial, sans-serif;
+  font-family: courier, monospace;
   text-transform: uppercase;
 }
 
@@ -23,4 +24,11 @@ body {
   -webkit-appearance: slider-vertical;
   appearance: slider-vertical;
   writing-mode: bt-lr;
+}
+
+.brink {
+  -webkit-animation-name: blinker;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: cubic-bezier(.5, 0, 1, 1);
+  -webkit-animation-duration: 1.7s;
 }

@@ -66,12 +66,12 @@ module.exports = class App extends React.Component {
   render() {
     return (
       <div className="pv4 pa2 pa4-l center app">
-        <div
-          className="tr f4 pb4"
+        <blink
+          className="tr f4 pb4 brink"
           contentEditable
         >
           Title
-        </div>
+        </blink>
         <div className="flex">
           <Graphic
             ref="graphic"
@@ -79,6 +79,7 @@ module.exports = class App extends React.Component {
             src={this.state.activeTrack.props && this.state.activeTrack.props.imageSrc || this.props.imageSrc}
             onClick={this.togglePlayback.bind(this)}
             onTouchStart={this.togglePlayback.bind(this)}
+            {...this.props}
           />
           <Slider
             className="slider slider--vertical w1 h-25 self-end

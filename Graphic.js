@@ -20,6 +20,11 @@ module.exports = class Graphic extends React.Component {
     this.stage = new PIXI.Container();
     this.stage.addChild(graphic);
 
+    var canvas = document.getElementsByTagName('canvas')[0];
+
+    canvas.width = this.windowWidth;
+    canvas.height = this.windowHeight;
+
     return graphic;
   }
 
@@ -31,6 +36,24 @@ module.exports = class Graphic extends React.Component {
     this.windowWidth = calculateWidth(window.innerWidth);
 
     this.windowHeight = calculateHeight(this.windowWidth);
+
+    if (this.props.resize) {
+      var imageEl = new Image();
+      imageEl.src = this.props.src;
+
+      return imageEl.onload = function() {
+        this.windowWidth = imageEl.width;
+        this.windowHeight = imageEl.height;
+
+        this.renderer = PIXI.autoDetectRenderer(this.windowWidth, this.windowHeight);
+        this.refs.graphic.appendChild(this.renderer.view);
+
+        this.handleGraphicUpdate(this.props.src);
+
+        this.animate();
+      }.bind(this)
+    }
+
 
     this.renderer = PIXI.autoDetectRenderer(this.windowWidth, this.windowHeight);
     this.refs.graphic.appendChild(this.renderer.view);
